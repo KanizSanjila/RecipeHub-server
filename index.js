@@ -149,17 +149,13 @@ app.delete('/recipes/:id', async (req, res) => {
   }
 });
 
-// 📊 সাময়িক ওভারভিউ স্ট্যাটস এপিআই (ইমেইল ফিল্টার ছাড়া)
+
 app.get('/user-stats', async (req, res) => {
   try {
-    // 💡 যেহেতু ডাটাতে ইমেইল নেই, তাই সরাসরি কালেকশনের সব ডাটা কাউন্ট করা হচ্ছে
     const totalRecipes = await recipeCollection.countDocuments({});
-
-    // সব রেসিপির মোট লাইক সংখ্যা যোগ করা
     const recipes = await recipeCollection.find({}).toArray();
     const totalLikes = recipes.reduce((sum, recipe) => sum + (recipe.likesCount || 0), 0);
-
-    // ডামি ফেভারিট কাউন্ট (টেস্ট করার জন্য)
+    
     const totalFavorites = totalRecipes * 2; 
 
     res.status(200).send({
