@@ -138,6 +138,23 @@ app.put('/recipes/:id', async (req, res) => {
   }
 });
 
+// ✅ ব্যাকএন্ড রাউট স্ট্রাকচার এমন হতে হবে:
+app.get('/recipes/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    // তোমার ডাটাবেজ কোয়েরি (যেমন MongoDB হলে):
+    const query = { _id: new ObjectId(id) };
+    const result = await recipeCollection.findOne(query);
+    
+    if (!result) {
+      return res.status(404).send({ message: "Recipe not found" });
+    }
+    res.send(result);
+  } catch (error) {
+    res.status(500).send({ message: "Internal server error", error });
+  }
+});
+
 app.delete('/recipes/:id', async (req, res) => {
   try {
     const id = req.params.id;
