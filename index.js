@@ -34,18 +34,41 @@ async function run() {
     const reportCollection = db.collection('report');
     const paymentCollection = db.collection('payments');
 
+//  ADD RECIPE ROUTE (With Max 2 Limit Check for Normal Users)
 app.post('/recipes', async (req, res) => {
   try {
     const newRecipe = req.body;
+    const userEmail = newRecipe.authorEmail; // ফ্রন্টএন্ড থেকে ইউজারের ইমেইল পাঠানো নিশ্চিত করতে হবে
 
-    console.log(" Backend received data successfully:", newRecipe);
-    
+    if (!userEmail) {
+      return res.status(400).send({ message: "User email is required to add a recipe." });
+    }
+
     if (!newRecipe.name || !newRecipe.image) {
       return res.status(400).send({ message: "Recipe Name and Image are required" });
     }
 
+    // 🔍 ১. ইউজার কালেকশন থেকে ইউজারের স্ট্যাটাস চেক করা
+    const user = await usersCollection.findOne({ email: userEmail });
+    const isPremium = user?.isPremium === true || user?.role === "premium";
+
+    // 🔍 ২. ইউজার যদি প্রিমিয়াম না হয়, তবে তার মোট রেসিপি সংখ্যা চেক করা
+    if (!isPremium) {
+      const existingRecipesCount = await recipeCollection.countDocuments({ authorEmail: userEmail });
+      
+      // console.log(existingRecipesCount)
+      // লিমিট ২ ক্রস করলে আটকে দেওয়া
+      if (existingRecipesCount >= 2) {
+        return res.status(403).send({ 
+          message: "Recipe limit reached! Normal users can only add up to 2 recipes. Please upgrade to premium to unlock unlimited uploads." 
+        });
+      }
+    }
+
+    // 💾 ৩. সব ঠিক থাকলে ডাটাবেজে রেসিপি ইনসার্ট করা
     const result = await recipeCollection.insertOne(newRecipe);
     res.status(201).send(result);
+
   } catch (error) {
     console.error("Error inserting recipe:", error);
     res.status(500).send({ message: "Internal server error" });
