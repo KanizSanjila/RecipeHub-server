@@ -65,7 +65,7 @@ app.post('/recipes', async (req, res) => {
       }
     }
 
-    // 💾 ৩. সব ঠিক থাকলে ডাটাবেজে রেসিপি ইনসার্ট করা
+
     const result = await recipeCollection.insertOne(newRecipe);
     res.status(201).send(result);
 
@@ -161,11 +161,10 @@ app.put('/recipes/:id', async (req, res) => {
   }
 });
 
-// ✅ ব্যাকএন্ড রাউট স্ট্রাকচার এমন হতে হবে:
+
 app.get('/recipes/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    // তোমার ডাটাবেজ কোয়েরি (যেমন MongoDB হলে):
     const query = { _id: new ObjectId(id) };
     const result = await recipeCollection.findOne(query);
     
