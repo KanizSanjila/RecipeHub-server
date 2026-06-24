@@ -52,7 +52,7 @@ app.post('/recipes', async (req, res) => {
     const user = await usersCollection.findOne({ email: userEmail });
     const isPremium = user?.isPremium === true || user?.role === "premium";
 
-    // 🔍 ২. ইউজার যদি প্রিমিয়াম না হয়, তবে তার মোট রেসিপি সংখ্যা চেক করা
+    //  ইউজার যদি প্রিমিয়াম না হয়, তবে তার মোট রেসিপি সংখ্যা চেক করা
     if (!isPremium) {
       const existingRecipesCount = await recipeCollection.countDocuments({ authorEmail: userEmail });
       
