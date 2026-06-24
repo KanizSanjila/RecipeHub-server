@@ -34,9 +34,8 @@ async function run() {
     const reportCollection = db.collection('report'); // কোনো রেসিপির বিরুদ্ধে রিপোর্ট জমা থাকে
     const paymentCollection = db.collection('payments');
 
-// ==========================================
-// 💳 ১. USER UPGRADE & PAYMENT HISTORY ROUTE
-// ==========================================
+
+// USER UPGRADE & PAYMENT HISTORY ROUTE
 app.patch('/api/users/upgrade-premium/:email', async (req, res) => {
   try {
     const { email } = req.params;
