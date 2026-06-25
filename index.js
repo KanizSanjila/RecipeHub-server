@@ -31,7 +31,7 @@ async function run() {
     const recipeCollection = db.collection('recipe'); // সব রেসিপি জমা থাকে
       const favoriteCollection = db.collection('favorite'); // ইউজারের পছন্দের রেসিপি সেভ থাকে
     const usersCollection = db.collection('user'); // সব ইউজারের প্রোফাইল ও রোল (Premium/Normal) থাকে
-    const reportCollection = db.collection('report'); // কোনো রেসিপির বিরুদ্ধে রিপোর্ট জমা থাকে
+    const reportCollection = db.collection('report');
     const paymentCollection = db.collection('payments');
 
 
